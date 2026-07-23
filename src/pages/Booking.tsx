@@ -15,6 +15,7 @@ import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { nightsBetween, formatINR, formatDate } from "@/lib/utils";
 import { toast } from "sonner";
+import bookingHero from "@/assets/img/img1.jpg";
 
 function todayISO() {
   return new Date().toISOString().split("T")[0];
@@ -131,7 +132,7 @@ export default function Booking() {
         eyebrow="Reserve Your Stay"
         title="Book the Homestay"
         description="You'll be booking the entire homestay — both bedrooms and the kitchen — just for your group."
-        image="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2000&auto=format&fit=crop"
+        image={bookingHero}
       />
 
       <div className="container-luxe grid grid-cols-1 gap-12 py-16 lg:grid-cols-[1.3fr,1fr]">
