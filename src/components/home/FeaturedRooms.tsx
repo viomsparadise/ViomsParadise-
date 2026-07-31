@@ -20,8 +20,7 @@ export function FeaturedRooms() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.7 }}
-          className="grid grid-cols-2 grid-rows-2 gap-3 overflow-hidden rounded-2xl"
-          style={{ aspectRatio: "4/5" }}
+          className="grid h-[540px] grid-cols-2 grid-rows-2 gap-3 overflow-hidden rounded-2xl"
         >
           {/* Large hero photo — spans full left column */}
           <div className="relative col-span-1 row-span-2 overflow-hidden rounded-l-2xl">
