@@ -2,15 +2,12 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { storageUrl } from "@/lib/utils";
 import { DEMO_ROOMS, type DemoRoom } from "@/data/demoContent";
-
 export interface RoomListItem extends DemoRoom {
   isDemo?: boolean;
 }
-
 export function useRooms() {
-  const [rooms, setRooms] = useState<RoomListItem[]>(DEMO_ROOMS.map((r) => ({ ...r, isDemo: true })));
+  const [rooms, setRooms] = useState<RoomListItem[]>([]);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     let active = true;
     (async () => {
@@ -21,13 +18,13 @@ export function useRooms() {
         .from("rooms_public")
         .select("*, room_images(storage_path, sort_order)")
         .order("created_at", { ascending: true });
-
       if (!active) return;
       if (error || !data || data.length === 0) {
+        // DB returned nothing — fall back to demo content so the page isn't blank
+        setRooms(DEMO_ROOMS.map((r) => ({ ...r, isDemo: true })));
         setLoading(false);
         return;
       }
-
       const mapped: RoomListItem[] = data.map((r: any) => ({
         id: r.id,
         slug: r.slug,
@@ -54,10 +51,8 @@ export function useRooms() {
       active = false;
     };
   }, []);
-
   return { rooms, loading };
 }
-
 export function useRoom(slug: string | undefined) {
   const { rooms, loading } = useRooms();
   const room = rooms.find((r) => r.slug === slug);

@@ -8,7 +8,6 @@ import { Lightbox } from "@/components/gallery/Lightbox";
 import { useRooms } from "@/hooks/useRooms";
 import { useApprovedReviews } from "@/hooks/useContent";
 import { formatINR } from "@/lib/utils";
-
 // Viom's Paradise is a single homestay unit, so this page always shows "the"
 // homestay (whatever slug is in the URL, or just the one active listing) —
 // there's no concept of picking between multiple rooms.
@@ -18,11 +17,33 @@ export default function RoomDetails() {
   const homestay = rooms[0];
   const { reviews } = useApprovedReviews(homestay?.id);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-
-  if (loading && !homestay) {
-    return <div className="flex min-h-[70vh] items-center justify-center text-forest-900/50">Loading homestay…</div>;
+  if (loading || !homestay) {
+    return (
+      <div className="pt-24">
+        <div className="container-luxe pt-8">
+          {/* Back button placeholder */}
+          <div className="h-5 w-16 rounded bg-forest-900/10 animate-pulse" />
+          {/* Gallery skeleton — matches the 2-col / 4-col grid */}
+          <div className="mt-6 grid grid-cols-2 gap-3 overflow-hidden rounded-2xl sm:grid-cols-4 sm:grid-rows-2">
+            <div className="col-span-2 row-span-2 min-h-[300px] bg-forest-900/10 animate-pulse rounded-lg" />
+            <div className="col-span-1 min-h-[140px] bg-forest-900/10 animate-pulse rounded-lg" />
+            <div className="col-span-1 min-h-[140px] bg-forest-900/10 animate-pulse rounded-lg" />
+            <div className="col-span-1 min-h-[140px] bg-forest-900/10 animate-pulse rounded-lg" />
+            <div className="col-span-1 min-h-[140px] bg-forest-900/10 animate-pulse rounded-lg" />
+          </div>
+          {/* Title + body skeleton */}
+          <div className="mt-16 grid grid-cols-1 gap-14 lg:grid-cols-[1.4fr,1fr]">
+            <div className="space-y-4">
+              <div className="h-4 w-40 rounded bg-forest-900/10 animate-pulse" />
+              <div className="h-10 w-3/4 rounded bg-forest-900/10 animate-pulse" />
+              <div className="h-4 w-full rounded bg-forest-900/10 animate-pulse" />
+              <div className="h-4 w-5/6 rounded bg-forest-900/10 animate-pulse" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
-
   if (!homestay) {
     return (
       <div className="flex min-h-[70vh] flex-col items-center justify-center gap-4 text-center">
@@ -31,14 +52,12 @@ export default function RoomDetails() {
       </div>
     );
   }
-
   return (
     <div className="pt-24">
       <div className="container-luxe pt-8">
         <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-sm text-forest-900/60 hover:text-forest-900">
           <ArrowLeft className="h-4 w-4" /> Back
         </button>
-
         {/* Gallery grid */}
         <div className="mt-6 grid grid-cols-2 gap-3 overflow-hidden rounded-2xl sm:grid-cols-4 sm:grid-rows-2">
           {homestay.images.slice(0, 5).map((img, i) => (
@@ -53,12 +72,10 @@ export default function RoomDetails() {
         </div>
         <Lightbox images={homestay.images} index={lightboxIndex} onClose={() => setLightboxIndex(null)} onNavigate={setLightboxIndex} />
       </div>
-
       <div className="container-luxe grid grid-cols-1 gap-14 py-16 lg:grid-cols-[1.4fr,1fr]">
         <div>
           <p className="eyebrow">The Whole Homestay, Just For You</p>
           <h1 className="mt-2 font-display text-4xl text-forest-900 sm:text-5xl">{homestay.name}</h1>
-
           <div className="mt-5 flex flex-wrap gap-6 text-sm text-forest-900/60">
             <span className="flex items-center gap-2"><Users className="h-4 w-4 text-gold" /> Up to {homestay.max_guests} guests</span>
             <span className="flex items-center gap-2"><BedDouble className="h-4 w-4 text-gold" /> {homestay.bed_config}</span>
@@ -67,9 +84,7 @@ export default function RoomDetails() {
               <span className="flex items-center gap-2"><Star className="h-4 w-4 fill-gold text-gold" /> {homestay.avg_rating} ({homestay.review_count} reviews)</span>
             )}
           </div>
-
           <p className="mt-8 max-w-2xl text-base leading-relaxed text-forest-900/70">{homestay.description}</p>
-
           <div className="mt-10">
             <h3 className="font-display text-xl text-forest-900">Amenities</h3>
             <div className="mt-5 grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3">
@@ -80,9 +95,7 @@ export default function RoomDetails() {
               ))}
             </div>
           </div>
-
           <NearbyRestaurants className="mt-10 max-w-lg" />
-
           {reviews.length > 0 && (
             <div className="mt-14">
               <h3 className="font-display text-xl text-forest-900">Guest Reviews</h3>
@@ -102,7 +115,6 @@ export default function RoomDetails() {
             </div>
           )}
         </div>
-
         {/* Sticky booking card */}
         <div className="lg:sticky lg:top-28 lg:self-start">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl border border-forest-900/10 bg-white p-8 shadow-luxury">
